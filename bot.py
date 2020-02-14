@@ -2,17 +2,29 @@ import telebot
 import time
 from config import Config
 
-
 config = Config()
-
 bot = telebot.TeleBot(config.token)
-
 reports = []
-greeting = 'Привет! Этот бот служит для того, чтобы собрать все баг-репорты от Dino 3d. Убедительная просьба, писать свой отзыв в одном сообщении. От вас требуется: описание проблемы, тип устройства(ноутбук/ПК/Мак), кол-во ОЗУ, название браузера, ссылку на скриншот(lightshot, imgur) консоли f12 (опционально) '
+
+class Message:
+    # contains methods that return string of message
+
+    def greeting(self):
+        greeting = 'Привет! Этот бот служит для того, чтобы собрать все баг-репорты от Dino 3d. Убедительная просьба, писать свой отзыв в одном сообщении. От вас требуется: описание проблемы, тип устройства(ноутбук/ПК/Мак), кол-во ОЗУ, название браузера, ссылку на скриншот(lightshot, imgur) консоли f12 (опционально) '
+        return greeting
+
+    def helping(self):
+        mess = 'Команды бота: \n/info - Информация о боте \n/read_feedback - читает новые баг-репорты(доступна только админу) \n/help - помощь'
+        return mess
+
+    
+
+messages = Message()
+
 
 @bot.message_handler(commands=['start', 'info'])
 def start_message(message):
-    bot.send_message(message.chat.id, greeting)
+    bot.send_message(message.chat.id, messages.greeting())
 
 @bot.message_handler(commands=['read_feedback'])
 def read_feedback(message):
@@ -31,7 +43,7 @@ def read_feedback(message):
 
 @bot.message_handler(commands=['help'])
 def help(message):
-    bot.send_message(message.chat.id, 'Команды бота: \n/info - Информация о боте \n/read_feedback - читает новые баг-репорты(доступна только админу) \n/help - помощь')
+    bot.send_message(message.chat.id, messages.helping())
 
 
 @bot.message_handler(content_types=['text', 'sticker', 'photo', 'voice', 'video_note', 'document'])
